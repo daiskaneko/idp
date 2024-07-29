@@ -1,0 +1,26 @@
+CREATE OR REPLACE VIEW "v_ses_log" AS 
+SELECT
+  eventtype eventType
+, mail.messageId messageID
+, "date_parse"(mail.timestamp, '%Y-%m-%dT%H:%i:%s.%fZ') mail_timestamp
+, "date_parse"(delivery.timestamp, '%Y-%m-%dT%H:%i:%s.%fZ') delivery_timestamp
+, "date_parse"(bounce.timestamp, '%Y-%m-%dT%H:%i:%s.%fZ') bounce_timestamp
+, "date_parse"(complaint.timestamp, '%Y-%m-%dT%H:%i:%s.%fZ') complaint_timestamp
+, mail.source mail_source
+, mail.commonHeaders.subject mail_subject
+, mail.commonHeaders.to[1] mail_recipient
+, delivery.reportingMTA delivery_reportingMTA
+, delivery.smtpResponse delivery_smtpResponse
+, delivery.recipients[1] delivery_recipient
+, bounce.bounceType bounce_bounceType
+, bounce.bounceSubType bounce_bounceSubType
+, bounce.reportingMTA bounce_reportingMTA
+, bounce.bouncedrecipients[1].emailAddress bounce_recipient
+, bounce.bouncedrecipients[1].action bounce_action
+, bounce.bouncedrecipients[1].status bounce_status
+, bounce.bouncedrecipients[1].diagnosticCode bounce_diagnosticCode
+, complaint.complainedrecipients[1].emailaddress complaint_recipient
+, complaint.complaintFeedbackType complaintFeedbackType
+, "date_parse"(complaint.arrivalDate, '%Y-%m-%dT%H:%i:%s.%fZ') complaint_arrivalDate
+FROM
+  t_ses_log
